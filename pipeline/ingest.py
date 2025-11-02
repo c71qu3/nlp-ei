@@ -30,7 +30,7 @@ def ensure_dirs(base_path: Path):
 
 async def download_listing(arxiv_category: str, session: aiohttp.ClientSession):
     """Async download of the arXiv listing page."""
-    arxiv_url = f"https://arxiv.org/list/{arxiv_category}/recent"
+    arxiv_url = f"https://arxiv.org/list/{arxiv_category}/recent?skip=0&show=1000"
     async with session.get(arxiv_url) as resp:
         resp.raise_for_status()
         text = await resp.text()
