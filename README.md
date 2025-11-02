@@ -19,6 +19,10 @@ We have collected 46 papers from arXiv's cs.AI category. For each paper, we extr
 - Abstract text
 - Structured sections (parsed into JSON format with hierarchical subsections)
 
+Below is the link to our Dataset
+
+**Dataset**: https://drive.proton.me/urls/VTYYKYJF04#c8bWZDYY82hF
+
 The data collection was initially implemented in Jupyter notebook (`data_ingestion/arxiv_scraper.ipynb`) that:
 - Fetches recent papers listing from arXiv
 - Downloads each paper's HTML page
