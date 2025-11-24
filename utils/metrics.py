@@ -1,9 +1,16 @@
 
 from bert_score import BERTScorer
-# Example texts
-reference = "This is a reference text example."
-candidate = "This is a candidate text example."
-# BERTScore calculation
-scorer = BERTScorer(model_type='bert-base-uncased')
-P, R, F1 = scorer.score([candidate], [reference])
-print(f"BERTScore Precision: {P.mean():.4f}, Recall: {R.mean():.4f}, F1: {F1.mean():.4f}")
+
+
+
+
+def calculate_bert_score(candidate:str, reference:str):
+        
+    scorer = BERTScorer(model_type='bert-base-uncased')
+    P, R, F1 = scorer.score([candidate], [reference])
+    return P,R, F1
+
+
+def evaluate_summary(candidate:str, reference:str):
+    P, R, F1  = calculate_bert_score(candidate=candidate, reference=reference)
+    print(f"Summary reached a bert F1 score of {F1}")
