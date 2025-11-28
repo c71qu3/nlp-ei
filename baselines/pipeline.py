@@ -8,6 +8,7 @@ from pathlib import Path
 from rouge_score import rouge_scorer
 from bert_score import score as bert_score
 from tqdm import tqdm
+from collections import OrderedDict
 
 from dotenv import load_dotenv
 
@@ -21,16 +22,12 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 # Load the sentence transformer model
-# This will download the model on first run
 print("Loading sentence-transformer model...")
 embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
 print("Model loaded.")
 
 
 def chunk_document(document: str, chunk_size: int = 1000, overlap: int = 200) -> List[str]:
-    """
-    Splits the document into chunks of a specified size with overlap.
-    """
     chunks = []
     start = 0
     while start < len(document):
@@ -40,26 +37,17 @@ def chunk_document(document: str, chunk_size: int = 1000, overlap: int = 200) ->
     return [chunk for chunk in chunks if chunk.strip()]
 
 def generate_embeddings(chunks: List[str]) -> np.ndarray:
-    """
-    Generates embeddings for each chunk using a sentence-transformer model.
-    """
     print(f"Generating embeddings for {len(chunks)} chunks...")
     embeddings = embedding_model.encode(chunks, convert_to_numpy=True)
     return embeddings
 
 def calculate_average_embedding(embeddings: np.ndarray) -> np.ndarray:
-    """
-    Calculates the average meaning embedding.
-    """
     if embeddings.size == 0:
         return np.zeros(embedding_model.get_sentence_embedding_dimension())
     avg_embedding = np.mean(embeddings, axis=0)
     return avg_embedding
 
 def compute_similarity(embedding1: np.ndarray, embedding2: np.ndarray) -> float:
-    """
-    Computes cosine similarity between two embeddings.
-    """
     norm1 = np.linalg.norm(embedding1)
     norm2 = np.linalg.norm(embedding2)
     if norm1 == 0 or norm2 == 0:
@@ -70,9 +58,6 @@ def compute_similarity(embedding1: np.ndarray, embedding2: np.ndarray) -> float:
 
 
 def get_top_n_chunks(chunks: List[str], embeddings: np.ndarray, avg_embedding: np.ndarray, n: int) -> List[str]:
-    """
-    Selects the top N chunks based on their similarity to the average embedding.
-    """
     similarities = [compute_similarity(avg_embedding, emb) for emb in embeddings]
     
     sorted_chunks_with_scores = sorted(zip(chunks, similarities), key=lambda item: item[1], reverse=True)
@@ -83,9 +68,6 @@ def get_top_n_chunks(chunks: List[str], embeddings: np.ndarray, avg_embedding: n
 
 
 async def run_summarization_pipeline(document: str, abstract: str, top_n: int = 5) -> dict:
-    """
-    Runs the full summarization pipeline.
-    """
     print("1. Chunking document...")
     chunks = chunk_document(document)
 
@@ -121,7 +103,6 @@ async def run_summarization_pipeline(document: str, abstract: str, top_n: int = 
     }
 
 def extract_text_from_sections(sections: List[Dict[str, Any]]) -> str:
-    """Recursively extracts text from the parsed sections JSON."""
     text = ""
     for section in sections:
         text += section.get('title', '') + "\n"
@@ -132,10 +113,7 @@ def extract_text_from_sections(sections: List[Dict[str, Any]]) -> str:
 
 
 def calculate_evaluation_scores(all_results: List[Dict], abstracts_dir: Path) -> List[Dict]:
-    """
-    Calculates ROUGE and BERTScore for summaries and returns the enhanced, nested results.
-    """
-    # Prepare lists for batch BERTScore calculation and for the new structure
+    # Preparing lists for batch BERTScore calculation and for the new structure
     all_gemini_summaries = []
     all_groq_summaries = []
     all_abstracts = []
@@ -161,11 +139,11 @@ def calculate_evaluation_scores(all_results: List[Dict], abstracts_dir: Path) ->
         # Create the new nested structure
         restructured_item = {
             "paper_id": paper_id,
-            "gemini": {
+            "gemini-2.5-flash": {
                 "summary": result['gemini_summary'],
                 "similarity_to_abstract": result.get('gemini_similarity_to_abstract')
             },
-            "groq": {
+            "llama-3.1-8b-instant": {
                 "summary": result['groq_summary'],
                 "similarity_to_abstract": result.get('groq_similarity_to_abstract')
             }
@@ -177,20 +155,20 @@ def calculate_evaluation_scores(all_results: List[Dict], abstracts_dir: Path) ->
     scorer = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeL'], use_stemmer=True)
     for i, result in enumerate(tqdm(nested_results, desc="ROUGE Scoring")):
         abstract = all_abstracts[i]
-        gemini_summary = result['gemini']['summary']
-        groq_summary = result['groq']['summary']
+        gemini_summary = result['gemini-2.5-flash']['summary']
+        groq_summary = result['llama-3.1-8b-instant']['summary']
 
         # Gemini ROUGE scores
         gemini_rouge = scorer.score(abstract, gemini_summary)
-        result['gemini']['rouge1'] = gemini_rouge['rouge1'].fmeasure
-        result['gemini']['rouge2'] = gemini_rouge['rouge2'].fmeasure
-        result['gemini']['rougeL'] = gemini_rouge['rougeL'].fmeasure
+        result['gemini-2.5-flash']['rouge1'] = gemini_rouge['rouge1'].fmeasure
+        result['gemini-2.5-flash']['rouge2'] = gemini_rouge['rouge2'].fmeasure
+        result['gemini-2.5-flash']['rougeL'] = gemini_rouge['rougeL'].fmeasure
 
         # Groq ROUGE scores
         groq_rouge = scorer.score(abstract, groq_summary)
-        result['groq']['rouge1'] = groq_rouge['rouge1'].fmeasure
-        result['groq']['rouge2'] = groq_rouge['rouge2'].fmeasure
-        result['groq']['rougeL'] = groq_rouge['rougeL'].fmeasure
+        result['llama-3.1-8b-instant']['rouge1'] = groq_rouge['rouge1'].fmeasure
+        result['llama-3.1-8b-instant']['rouge2'] = groq_rouge['rouge2'].fmeasure
+        result['llama-3.1-8b-instant']['rougeL'] = groq_rouge['rougeL'].fmeasure
         
     # Calculate BERTScore in a batch for efficiency
     print("Calculating BERTScore (this may take a while and download a model on first run)...")
@@ -198,21 +176,61 @@ def calculate_evaluation_scores(all_results: List[Dict], abstracts_dir: Path) ->
     # Gemini BERTScore
     P_gemini, R_gemini, F1_gemini = bert_score(all_gemini_summaries, all_abstracts, lang="en", verbose=True, model_type='distilbert-base-uncased')
     for i, result in enumerate(nested_results):
-        result['gemini']['bertscore_f1'] = F1_gemini[i].item()
+        result['gemini-2.5-flash']['bertscore_f1'] = F1_gemini[i].item()
 
     # Groq BERTScore
     P_groq, R_groq, F1_groq = bert_score(all_groq_summaries, all_abstracts, lang="en", verbose=True, model_type='distilbert-base-uncased')
     for i, result in enumerate(nested_results):
-        result['groq']['bertscore_f1'] = F1_groq[i].item()
+        result['llama-3.1-8b-instant']['bertscore_f1'] = F1_groq[i].item()
 
     return nested_results
 
 
+def reorder_paper_keys(paper_obj):
+    """Reorder keys so abstract comes right after paper_id."""
+    ordered = OrderedDict()
+    
+    if 'paper_id' in paper_obj:
+        ordered['paper_id'] = paper_obj['paper_id']
+    
+    if 'abstract' in paper_obj:
+        ordered['abstract'] = paper_obj['abstract']
+    
+    for key in paper_obj:
+        if key not in ['paper_id', 'abstract']:
+            ordered[key] = paper_obj[key]
+    
+    return ordered
+
+
+def add_abstracts_and_reorder(results: List[Dict], abstracts_dir: Path) -> List[Dict]:
+    print("\n" + "="*60)
+    print("Adding abstracts and reordering keys...")
+    print("="*60)
+    
+    reordered_results = []
+    for i, paper_result in enumerate(results):
+        paper_id = paper_result['paper_id']
+        print(f"[{i+1}/{len(results)}] Adding abstract for {paper_id}")
+        
+        # Load abstract
+        abstract_file = abstracts_dir / f"{paper_id}.txt"
+        if abstract_file.exists():
+            with open(abstract_file, 'r', encoding='utf8') as f:
+                abstract = f.read().strip()
+            paper_result['abstract'] = abstract
+        else:
+            print(f"Warning: Abstract file not found for {paper_id}")
+            paper_result['abstract'] = ""
+        
+        # Reorder keys
+        reordered_paper = reorder_paper_keys(paper_result)
+        reordered_results.append(reordered_paper)
+    
+    return reordered_results
+
+
 async def main():
-    """
-    Main function to load actual paper data and run the pipeline on them.
-    """
-    # Build a path to the data directory relative to this script's location
     script_dir = Path(__file__).resolve().parent
     project_root = script_dir.parent
     data_path = project_root / "data" / "raw"
@@ -225,8 +243,8 @@ async def main():
         
     all_results = []
     print(f"Found {len(abstract_files)} papers. Processing all of them...")
-    
-    # test_files = abstract_files[:3]
+
+    # temp_files = abstract_files[:3]
     for i, abstract_file in enumerate(abstract_files):
         paper_id = abstract_file.stem
         sections_file = data_path / "parsed_sections" / f"{paper_id}.json"
@@ -261,16 +279,19 @@ async def main():
     abstracts_path = data_path / "abstracts"
     evaluated_results = calculate_evaluation_scores(all_results, abstracts_path)
 
+    # Add abstracts and reorder keys
+    final_results = add_abstracts_and_reorder(evaluated_results, abstracts_path)
+
     # Save final evaluated results to a JSON file
     results_dir = project_root / "baselines/results"
     results_dir.mkdir(exist_ok=True)
-    output_file = results_dir / "evaluation_results.json"
+    output_file = results_dir / "evaluation_results_final.json"
 
     with open(output_file, "w", encoding="utf8") as f:
-        json.dump(evaluated_results, f, ensure_ascii=False, indent=2)
+        json.dump(final_results, f, ensure_ascii=False, indent=2)
         
     print(f"\n" + "="*60)
-    print(f"Pipeline complete! Final evaluation results saved to {output_file}")
+    print(f"Pipeline complete! Final evaluation results with abstracts saved to {output_file}")
     print("="*60)
 
 

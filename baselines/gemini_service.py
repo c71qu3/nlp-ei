@@ -3,9 +3,6 @@ import aiohttp
 import asyncio
 
 async def summarize_with_gemini(text: str, api_key: str) -> str:
-    """
-    Summarizes the given text using the Gemini API.
-    """
     if not api_key:
         raise ValueError("Gemini API key not found. Please set the GEMINI_API_KEY environment variable.")
 

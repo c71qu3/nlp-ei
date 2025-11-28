@@ -3,9 +3,6 @@ import aiohttp
 import asyncio
 
 async def summarize_with_groq(text: str, api_key: str) -> str:
-    """
-    Summarizes the given text using the Groq API.
-    """
     if not api_key:
         raise ValueError("Groq API key not found. Please set the GROQ_API_KEY environment variable.")
 
