@@ -36,9 +36,9 @@ Using the BM25 algorithm, each sentence is scored based on its lexical relevance
 
 #### LLM-based Abstractive Methods
 
-**5. [Chunk-and-Summarize (Two-pass LLM)](summarization/llm_approach.py):**
-The scientific paper is divided into manageable chunks. Each chunk is summarized independently using an LLM.
-These intermediate summaries are then concatenated and passed through the LLM again to produce the final summary.
+**5. [Chunk-and-Summarize (Two-pass LLM)](baselines/LLMSubsectionSummaryApproach.ipynb):**
+The scientific paper is divided into manageable chunks. These are effectively the sections and its subsections (building a tree of different sections levels) Each chunk is summarized independently using an LLM in a bottom up approach.
+These intermediate summaries are then concatenated and passed through (bottom-up) the LLM again to produce the final summary. This means that every section has the summary of deeper level subsections as context information.
 
 **6. [Embedding-based Chunk Selection + LLM Summarization](baselines/pipeline.py)**
 Each chunk and the full document are embedded using a sentence embedding model.
