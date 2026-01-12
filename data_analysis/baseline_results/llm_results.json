@@ -1,0 +1,122 @@
+[
+  {
+    "paper_id": "2511.21398v1",
+    "abstract": "Web automation uses intelligent agents to perform high-level tasks by mimicking human interactions with webpages. Despite recent advances in LLM-based web agents, efficiently navigating complex, real-world webpages remains challenging due to massive DOM structures (10,000∼\\sim100,000 tokens). Current approaches either truncate DOMs—losing vital information—or use inefficient heuristics and separate ranking models, failing to balance precision and scalability. We introduce Prune4Web, a novel paradigm that transforms DOM processing from LLM-based filtering to programmatic pruning. Our key innovation is DOM Tree Pruning Programming, where an LLM generates executable Python scoring programs to dynamically filter DOM elements based on semantic clues from decomposed sub-tasks. This approach eliminates the need for LLMs to process full DOMs, instead delegating traversal and scoring to lightweight, interpretable programs. The result is a 25∼\\sim50 times reduction in candidate elements for grounding, enabling precise action localization without attention dilution. Additionally, we propose a data annotation method and a two-turn dialogue training strategy that jointly optimizes Planner, Programmatic Filter, and Grounder in a unified framework. Experiments demonstrate state-of-the-art performance. On our low-level task grounding task, our approach dramatically increases grounding accuracy from 46.8% to 88.28%, highlighting its effectiveness.",
+    "gemma3:1b": {
+      "summary": "The Prune4Web framework utilizes a three-stage workflow: planning, filtering, and grounding. The planner decomposes high-level tasks into sub-tasks, generating a programmatic element filter to efficiently score and rank elements. This filter leverages the low-level sub-tasks of the planner to avoid long DOM sources, reducing token truncation and attention dilution. Experiments demonstrate significant improvements in grounding accuracy, boosting it from 46.8% to 88.28% on benchmark datasets. The framework employs DOM Tree Pruning Programming, a technique that leverages LLM-generated locator programs to reduce the burden of long contexts, enhancing task completion rates and improving overall results.",
+      "similarity_to_abstract": 0.7813383936882019,
+      "rouge1": 0.41693811074918563,
+      "rouge2": 0.0,
+      "rougeL": 0.16938110749185667,
+      "bertscore_f1": 0.6608024835586548
+    }
+  },
+  {
+    "paper_id": "2511.21444v1",
+    "abstract": "Extreme weather events pose escalating risks to global society, underscoring the urgent need to unravel their underlying physical mechanisms. Yet the prevailing expert-driven, labor-intensive diagnostic paradigm has created a critical analytical bottleneck, stalling scientific progress. While AI for Earth Science has achieved notable advances in prediction, the equally essential challenge of automated diagnostic reasoning remains largely unexplored. We present the Extreme Weather Expert (EWE), the first intelligent agent framework dedicated to this task. EWE emulates expert workflows through knowledge-guided planning, closed-loop reasoning, and a domain-tailored meteorological toolkit. It autonomously produces and interprets multimodal visualizations from raw meteorological data, enabling comprehensive diagnostic analyses. To catalyze progress, we introduce the first benchmark for this emerging field, comprising a curated dataset of 103 high-impact events and a novel step-wise evaluation metric. EWE marks a step toward automated scientific discovery and offers the potential to democratize expertise and intellectual resources, particularly for developing nations vulnerable to extreme weather.",
+    "gemma3:1b": {
+      "summary": "The Extreme Weather Expert (EWE) framework utilizes a chain-of-thought prompting approach and a specialized meteorological toolkit to autonomously diagnose extreme weather events. It employs a self-evolving closed-loop reasoning system, iteratively planning, using data, observing, and interpreting meteorological information to construct a causal explanation. The agent’s knowledge-enhanced planning process leverages expert-annotated guidelines and a dynamic memory management module to constrain reasoning and improve accuracy. The framework addresses limitations of manual expert diagnosis by automating the diagnostic workflow and leveraging the agent’s latent meteorological knowledge through a dual-auditor module. The paper evaluates five Large Language Models (LLMs) – MLLMs, including O4-Mini, Claude-4, GPT-4.1, and Gemini-2.5-Pro – on a complex meteorological analysis task, focusing on quantifying understanding of event dynamics through coherent causal links and rewarding coherent causal links between observations and physical implications. The evaluation process involves classifying each step within the agent’s trajectory and aggregating multimodal content for automated assessment.",
+      "similarity_to_abstract": 0.8100446462631226,
+      "rouge1": 0.363076923076923,
+      "rouge2": 0.0,
+      "rougeL": 0.16,
+      "bertscore_f1": 0.6087276339530945
+    }
+  },
+  {
+    "paper_id": "2511.21460v1",
+    "abstract": "Ensuring the safety of embodied AI agents during task planning is critical for real-world deployment, especially in household environments where dangerous instructions pose significant risks. Existing methods often suffer from either high computational costs due to preference alignment training or over-rejection when using single-agent safety prompts. To address these limitations, we propose MADRA, a training-free Multi-Agent Debate Risk Assessment framework that leverages collective reasoning to enhance safety awareness without sacrificing task performance. MADRA employs multiple LLM-based agents to debate the safety of a given instruction, guided by a critical evaluator that scores responses based on logical soundness, risk identification, evidence quality, and clarity. Through iterative deliberation and consensus voting, MADRA significantly reduces false rejections while maintaining high sensitivity to dangerous tasks. Additionally, we introduce a hierarchical cognitive collaborative planning framework that integrates safety, memory, planning, and self-evolution mechanisms to improve task success rates through continuous learning. We also contribute SafeAware-VH, a benchmark dataset for safety-aware task planning in VirtualHome, containing 800 annotated instructions. Extensive experiments on AI2-THOR and VirtualHome demonstrate that our approach achieves over 90% rejection of unsafe tasks while ensuring that safe-task rejection is low, outperforming existing methods in both safety and execution efficiency. Our work provides a scalable, model-agnostic solution for building trustworthy embodied agents.",
+    "gemma3:1b": {
+      "summary": "Here’s a summary of the paper:\n\nThe paper presents a multi-agent framework, SafeAware-VH, designed for virtual home safety research. It utilizes a multi-agent debate system to assess risk in LLM-driven embodied AI agents, incorporating a hierarchical cognitive collaborative planning architecture. The MADRA method enhances safety by leveraging chain-of-thought reasoning, improving detection and risk assessment across multiple language models. Experiments demonstrate superior performance compared to preference training and chain-of-thought prompting, achieving high safety rejection rates and competitive task success. The framework integrates memory enhancement and a critical evaluator, addressing bias and over-rejection.",
+      "similarity_to_abstract": 0.847952663898468,
+      "rouge1": 0.4299065420560748,
+      "rouge2": 0.0,
+      "rougeL": 0.16199376947040497,
+      "bertscore_f1": 0.644801914691925
+    }
+  },
+  {
+    "paper_id": "2511.21471v1",
+    "abstract": "Spatial cognition is fundamental to real-world multimodal intelligence, allowing models to effectively interact with the physical environment. While multimodal large language models (MLLMs) have made significant strides, existing benchmarks often oversimplify spatial cognition, reducing it to a single-dimensional metric, which fails to capture the hierarchical structure and interdependence of spatial abilities. To address this gap, we propose a hierarchical spatial cognition framework that decomposes spatial intelligence into five progressively complex levels from basic observation to high-level planning. Building upon this taxonomy, we construct SpatialBench, a large-scale, fine-grained benchmark covering 15 tasks aligned with these cognitive levels. To provide a unified evaluation across heterogeneous tasks, we further introduce a high-level capability–oriented metric that reliably assesses a model’s overall spatial reasoning ability. Extensive experiments over massive MLLMs reveal distinct performance stratification across cognitive levels: models exhibit strong perceptual grounding yet remain limited in symbolic reasoning, causal inference, and planning. Additional human tests demonstrate that humans perform selective, goal-directed abstraction, while MLLMs tend to over-attend to surface details without coherent spatial intent. Our work establishes the first systematic framework for measuring hierarchical spatial cognition in MLLMs, laying the foundation for future spatially intelligent systems.\nOur codes are available at https://github.com/XPR2004/SpatialBench.",
+    "gemma3:1b": {
+      "summary": "SpatialBench benchmark evaluates MLLMs’ spatial intelligence through progressively challenging cognitive levels, utilizing first-person videos and a weighted cognitive architecture. The dataset comprises 1,347 question-answer pairs, focusing on observation, topology, symbolic reasoning, causality, and planning, with a calibrated RGB camera and 3D LiDAR sensor for precise synchronization. Models demonstrate rapid improvement in spatial reasoning across diverse models, including proprietary and open-source systems, with a high-level score integrating performance across five cognitive levels. The evaluation reveals limitations in symbolic abstraction and causal inference, highlighting SpatialBench’s value as a framework for improving spatially grounded intelligence in MLLMs.",
+      "similarity_to_abstract": 0.7498996257781982,
+      "rouge1": 0.35369774919614155,
+      "rouge2": 0.0,
+      "rougeL": 0.18006430868167203,
+      "bertscore_f1": 0.6062982678413391
+    }
+  },
+  {
+    "paper_id": "2511.21522v1",
+    "abstract": "The key limitation of the verification performance lies in the ability of error detection. With this intuition we designed several variants of pessimistic verification, which are simple workflows that could significantly improve the verification of open-ended math questions. In pessimistic verification we construct multiple parallel verifications for the same proof, and the proof is deemed incorrect if any one of them reports an error. This simple technique significantly improves the performance across many math verification benchmarks without incurring substantial computational resources. Its token efficiency even surpassed extended long-CoT in test-time scaling. Our case studies further indicate that the majority of false negatives in stronger models are actually caused by annotation errors in the original dataset, so our method’s performance is in fact underestimated. Self-verification for mathematical problems can effectively improve the reliability and performance of language model outputs, and it also plays a critical role in enabling long-horizon mathematical tasks. We believe that research on pessimistic verification will help enhance the mathematical capabilities of language models across a wide range of tasks.",
+    "gemma3:1b": {
+      "summary": "The authors propose pessimistic verification methods, utilizing multiple queries and pruning to improve efficiency and robustness, with vertical pessimistic verification performing best. GPT-5-mini and stronger models frequently identify critical errors, suggesting the method’s effectiveness for QiuZhen-Bench annotation. The authors believe this approach is crucial for mathematical rigor and aligns with the field’s trend toward formalization, offering direct applications in math/code workflows and potential for pushing the capabilities of large language models.",
+      "similarity_to_abstract": 0.7610581517219543,
+      "rouge1": 0.2980392156862745,
+      "rouge2": 0.0,
+      "rougeL": 0.1803921568627451,
+      "bertscore_f1": 0.598639965057373
+    }
+  },
+  {
+    "paper_id": "2511.21569v1",
+    "abstract": "If a language model cannot reliably disclose that it is an AI when directly questioned in expert contexts, users cannot trust its boundaries of competence elsewhere. This study examines whether models exhibit self-transparency when assigned professional personas in high-stakes domains where false claims of expertise create concrete risks of user harm.",
+    "gemma3:1b": {
+      "summary": "Here’s a concise summary of the paper:\n\nThe study investigates model transparency in professional personas, using behavioral testing and Bayesian uncertainty propagation to assess how models handle AI identification. Sixteen models were audited under identical conditions, revealing that model identity significantly improves self-disclosure, particularly in financial and medical contexts, reflecting domain-specific training. The Reverse Gell-Mann Amnesia effect suggests users may misinterpret transparency. Model behavior varies across personas, with reasoning training increasing disclosure rates. The paper highlights domain-specific differences in disclosure, with the Financial Advisor requiring higher disclosure and the Neurosurgeon requiring lower. Statistical tests confirm model fit and demonstrate that model size correlates with disclosure. The study concludes that models should explicitly specify behaviors, train for distinct objectives, and empirically verify across deployment domains, while also addressing ethical considerations and the brittleness of current AI identity disclosures.",
+      "similarity_to_abstract": 0.6757441163063049,
+      "rouge1": 0.17435897435897435,
+      "rouge2": 0.0,
+      "rougeL": 0.11282051282051281,
+      "bertscore_f1": 0.5626594424247742
+    }
+  },
+  {
+    "paper_id": "2511.21570v1",
+    "abstract": "In an era marked by rapid technological advancements and complex global challenges, responsible foresight has emerged as an essential framework for policymakers aiming to navigate future uncertainties and shape the future. Responsible foresight entails the ethical anticipation of emerging opportunities and risks, with a focus on fostering proactive, sustainable, and accountable future design. This paper coins the term \"responsible computational foresight\", examining the role of human-centric artificial intelligence and computational modeling in advancing responsible foresight, establishing a set of foundational principles for this new field and presenting a suite of AI-driven foresight tools currently shaping it.\nAI, particularly in conjunction with simulations and scenario analysis, enhances policymakers’ ability to address uncertainty, evaluate risks, and devise strategies geared toward sustainable, resilient futures. However, responsible foresight extends beyond mere technical forecasting; it demands a nuanced understanding of the interdependencies within social, environmental, economic and political systems, alongside a commitment to ethical, long-term decision-making that supports human intelligence. We argue that AI will play a role as a supportive tool in responsible, human-centered foresight, complementing rather than substituting policymaker judgment to enable the proactive shaping of resilient and ethically sound futures. This paper advocates for the thoughtful integration of AI into foresight practices to empower policymakers and communities as they confront the grand challenges of the 21st century.",
+    "gemma3:1b": {
+      "summary": "This paper introduces responsible computational foresight as a dynamic approach to policymaking, emphasizing strategic utilization of AI to understand, anticipate, and prepare for diverse future scenarios. It highlights key methodologies including AI-driven forecasting, diverse modeling techniques (superforecasting, prediction markets, world simulation, scenario building, participatory futures, and hybrid intelligence), and a crucial focus on ethical considerations and human agency.",
+      "similarity_to_abstract": 0.8348264098167419,
+      "rouge1": 0.2437275985663082,
+      "rouge2": 0.0,
+      "rougeL": 0.12903225806451613,
+      "bertscore_f1": 0.6054140329360962
+    }
+  },
+  {
+    "paper_id": "2511.21591v1",
+    "abstract": "Large language models (LLMs) achieve impressive results on many benchmarks, yet their capacity for planning and stateful reasoning remains unclear. We study these abilities directly, without code execution or other tools, using the 8-puzzle: a classic task that requires state tracking and goal-directed planning while allowing precise, step-by-step evaluation. Four models are tested under common prompting conditions (Zero-Shot, Chain-of-Thought, Algorithm-of-Thought) and with tiered corrective feedback. Feedback improves success rates for some model–prompt combinations, but many successful runs are long, computationally expensive, and indirect. We then examine the models with an external move validator that provides only valid moves. Despite this level of assistance, none of the models solve any puzzles in this setting. Qualitative analysis reveals two dominant deficits across all models: (1) brittle internal state representations, leading to frequent invalid moves, and (2) weak heuristic planning, with models entering loops or selecting actions that do not reduce the distance to the goal state. These findings indicate that, in the absence of external tools such as code interpreters, current LLMs have substantial limitations in planning and that further progress may require mechanisms for maintaining explicit state and performing structured search.",
+    "gemma3:1b": {
+      "summary": "The study investigates four Large Language Models (GPT-5, Gemini, GPT-5 mini, and Llama 3.1 8B-Instruct) on the 8-puzzle task, focusing on planning and reasoning without code execution, utilizing a standard prompting strategy and iterative feedback. The models exhibit deficits in invalid moves and loop-inducing behavior, leading to qualitative analysis of why these models struggle with this task. The paper presents a tool-free evaluation protocol and a detailed failure-mode analysis, contributing to a deeper understanding of LLM planning capabilities.",
+      "similarity_to_abstract": 0.7450572848320007,
+      "rouge1": 0.3356643356643356,
+      "rouge2": 0.0,
+      "rougeL": 0.18881118881118883,
+      "bertscore_f1": 0.594088077545166
+    }
+  },
+  {
+    "paper_id": "2511.21636v1",
+    "abstract": "AI/ML models have rapidly gained prominence as innovations for solving previously unsolved problems and their unintended consequences from amplifying human biases. Advocates for responsible AI/ML have sought ways to draw on the richer causal models of system dynamics to better inform the development of responsible AI/ML. However, a major barrier to advancing this work is the difficulty of bringing together methods rooted in different underlying assumptions (i.e., Dana Meadow’s ‘the unavoidable a priori’). This paper brings system dynamics and structural equation modeling together into a common mathematical framework that can be used to generate systems from distributions, develop methods, and compare results to inform the underlying epistemology of system dynamics for data science and AI/ML applications.",
+    "gemma3:1b": {
+      "summary": "The paper introduces a framework for systematically comparing and evaluating different approaches to causal modeling, particularly System Dynamics and Structural Equation Modeling (SEM). It begins by defining the core differences between the two methodologies, emphasizing System Dynamics’ focus on behavior patterns and feedback loops versus SEM’s emphasis on causal relationships and quantification. The paper then outlines a general model incorporating both approaches, providing examples of each methodology. It discusses limitations and future directions, including the challenges of validating model outputs and the importance of incorporating contextual factors. The framework is presented as a space for systematic comparison and potential bias mitigation, leveraging the inherent strengths of both approaches. The paper also touches upon the model’s design, including the use of polynomial functions and the consideration of time lags and error variance. It highlights the importance of model validation and the potential for adaptation to different systems. The paper concludes by outlining key distinctions, including the goal of capturing system dynamics versus quantifying causal relationships, and the role of the model in facilitating understanding and prediction.",
+      "similarity_to_abstract": 0.5852130055427551,
+      "rouge1": 0.3010033444816053,
+      "rouge2": 0.0,
+      "rougeL": 0.15384615384615383,
+      "bertscore_f1": 0.5589686632156372
+    }
+  },
+  {
+    "paper_id": "2511.21678v1",
+    "abstract": "MLLMs exhibit strong reasoning on isolated queries, yet they operate de novo—solving each problem independently and often repeating the same mistakes. Existing memory-augmented agents mainly store past trajectories for reuse. However, trajectory-based memory suffers from brevity bias, gradually losing essential domain knowledge. More critically, even in truly multimodal problem-solving settings, it records only a single-modality trace of past behavior, failing to preserve how visual attention and logical reasoning jointly contributed to the solution. This is fundamentally misaligned with human cognition: semantic memory is both multimodal and integrated, preserving visual and abstract knowledge through coordinated but distinct representational streams. We thus introduce ViLoMem, a dual-stream memory framework that constructs compact, schema-based memory. It separately encodes visual distraction patterns and logical reasoning errors, enabling MLLMs to learn from their successful and failed experiences. Following a grow-and-refine principle, the system incrementally accumulates and updates multimodal semantic knowledge—preserving stable, generalizable strategies while avoiding catastrophic forgetting.\nAcross six multimodal benchmarks, ViLoMem consistently improves pass@1 accuracy and substantially reduces repeated visual and logical errors. Ablations confirm the necessity of dual-stream memory with explicit distraction–hallucination separation, demonstrating the value of error-aware multimodal memory for lifelong and cross-domain agentic learning. Our project page will be available at https://weihao-bo.github.io/ViLoMeo-page/.",
+    "gemma3:1b": {
+      "summary": "ViLoMem is a dual-stream memory framework that utilizes visual and logical memory coordination to improve multimodal reasoning, achieving significant advancements in pass@1 accuracy across diverse benchmarks through enhanced visual perception and reasoning. The system employs a memory generation process that identifies error types and generates corrective guidance, leveraging a structured JSON dictionary and similarity checks for knowledge consolidation.  It utilizes a dual-stream memory architecture with visual and logical memory retrieval, incorporating attention maps and a semantic hub for redundant information, demonstrating improved mathematical reasoning and complementary memory benefits through cross-domain transfer and domain-mismatched task evaluation.",
+      "similarity_to_abstract": 0.7832867503166199,
+      "rouge1": 0.3613707165109034,
+      "rouge2": 0.0,
+      "rougeL": 0.16822429906542055,
+      "bertscore_f1": 0.6169443726539612
+    }
+  }
+]
