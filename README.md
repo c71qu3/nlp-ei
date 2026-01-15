@@ -11,6 +11,10 @@ We are focusing on academic research papers from the Computer Science - Artifici
 
 ---
 
+## Presentation
+
+The presentation can be found under [Presentation](presentation/final_presentation.pdf)
+
 ## Milestone 2
 
 ### Extractive and Abstractive Summarization Baselines
