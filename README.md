@@ -83,6 +83,82 @@ Implementations can be found in the `best_method/` directory. The `summary_templ
 
 ---
 
+## Milestone 3
+
+### RAG-Enhanced Summarization
+
+For Milestone 3, we developed a RAG-based summarization system that combines statistical retrieval with LLM reasoning to generate high-quality scientific abstracts. Building on our baseline evaluations, we implemented a hybrid approach using BM25 for sentence selection and structured prompting for coherent summary generation.
+
+#### [Initial Core Implementation: BM25 + LLM](best_method/base_bm25_plus_llm.ipynb)
+
+**1. Document Processing:**
+The system breaks papers into sentences, tokenizes and lemmatizes text for improved retrieval accuracy.
+
+**2. BM25 Sentence Selection:**
+BM25 scoring ranks sentences by relevance to the full document, selecting the top-N most representative sentences. This extractive approach proved most reliable in our baseline comparisons.
+
+**3. LLM-Based Summary Shaping:**
+Selected sentences are passed to an LLM (OpenAI o4-mini) with structured prompts to:
+- Reorder sentences for logical flow
+- Discard less relevant information
+- Generate a concise 5-8 sentence summary
+- Maintain objective, third-person academic tone
+
+#### [Section-Based Scaffolded Approach](best_method/base_bm25_plus_llm_sectioned.ipynb)
+
+**1. Section Bucketing:**
+Papers are parsed into semantic sections (Introduction, Methods, Results, Conclusion) using regex pattern matching on headers.
+
+**2. Hierarchical Summarization:**
+Each section is independently summarized with section-specific prompts:
+- Introduction: Problem space and proposed solution
+- Methods: Technical approach and implementation
+- Results: Quantitative metrics and key findings
+- Conclusion: Implications and future work
+
+**3. Summary Assembly:**
+Section summaries are combined into a cohesive abstract using a joiner prompt that ensures logical transitions and maintains information density.
+
+**4. Refinement Step:**
+A second LLM pass refines the draft to:
+- Increase information density
+- Preserve all metrics and proper nouns
+- Remove filler phrases
+- Target 150-250 word count
+
+**5. Fact-Based Evaluation:**
+We developed a novel evaluation framework that generates 5 fact-based questions covering problem, methodology, results, dataset, and limitations. Summaries are scored on recall accuracy compared to ground truth answers from the full paper.
+The results can be found in [Quantitave Review](data_analysis/quantitative_review.ipynb)
+
+#### [Verbatim RAG Integration](best_method/with_verbatim_rag.ipynb)
+
+We integrated the Verbatim RAG framework for loading and processing documents, grounding LLM-generated summaries with exact citations from source documents, preventing hallucination and enabling verifiable claims.
+
+### Methodology Comparison
+
+The section-based approach (V1_SCAFFOLDED_TEMPLATING and REFINED_SCAFFOLDED_TEMPLATING) outperforms direct BM25 methods by:
+- Capturing structured information across all paper sections
+- Maintaining better coherence through hierarchical processing
+- Preserving critical quantitative results
+- Enabling targeted refinement for publication-quality output
+
+### Data Structure
+```
+best_method/
+├── base_bm25_plus_llm.ipynb
+├── base_bm25_plus_llm_sectioned.ipynb
+├── with_verbatim_rag.ipynb
+└── summary_templating.json
+```
+
+Implementations can be found in the `best_method/` directory. The `summary_templating.json` file contains generated summaries for evaluation papers.
+
+---
+
+## Presentation
+
+The presentation can be found under [Presentation](presentation/final_presentation.pdf)
+
 ## Milestone 2
 
 ### Extractive and Abstractive Summarization Baselines
