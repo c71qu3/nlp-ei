@@ -56,6 +56,7 @@ A second LLM pass refines the draft to:
 
 **5. Fact-Based Evaluation:**
 We developed a novel evaluation framework that generates 5 fact-based questions covering problem, methodology, results, dataset, and limitations. Summaries are scored on recall accuracy compared to ground truth answers from the full paper.
+The results can be found in [Quantitave Review](data_analysis/quantitative_review.ipynb)
 
 #### [Verbatim RAG Integration](best_method/with_verbatim_rag.ipynb)
 
