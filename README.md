@@ -9,7 +9,7 @@ Our team is working on Topic 14: Retrieval-Augmented Generation for Summarizatio
 ### Chosen Domain
 We are focusing on academic research papers from the Computer Science - Artificial Intelligence domain, sourced from arXiv. This also helps us gain consistent document structure (abstract, introduction, methods, results, conclusions), also ables us to test summarization across different paper types within AI
 
-### [Management summary] (management_summary/Management_summary.pdf)
+### [Management summary](management_summary/Management_summary.pdf)
 ---
 
 
